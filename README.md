@@ -17,7 +17,7 @@ docker build -t mern-frontend .
 
 ### Verify the client is running
 
-Open your browser and type `http://localhost:5173`
+Open your browser and type `http://localhost:5173` OR `http://<your-public-ip-address>:5173`
 
 ### Run the mongodb container
 
@@ -38,3 +38,4 @@ docker build -t mern-backend .
 
 `docker compose up -d`
 
+![MERN Dashboard](myweb-dashboard-with-docker-compose.png)
