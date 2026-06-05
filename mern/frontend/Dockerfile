@@ -1,23 +1,33 @@
-# Use the official image as a parent image
-# Description: Dockerfile for the client side of the MERN stack application
+# Description: Dockerfile for the Client/frontend side of the side of the MERN Stack Application
 
-# Use the official image as a parent image
-FROM node:18.9.1
+# Stage 1: Install dependencies
+# Used the official node image as the parent image 
+FROM node:18.9.1 AS deps
 
-# Set the working directory
+# Sets the working directory 
 WORKDIR /app
 
-# Copy the file from your host to your current location
-COPY package.json .
+# Copy the dependencies file from host to the image working directory
+COPY package.json package-lock.json ./ 
 
-# Run the command inside your image filesystem
-RUN npm install
+# Runs the command to install dependencies inside your image
+RUN --mount=type=cache,target=/root/.npm \
+	npm ci
 
-# Inform Docker that the container is listening on the specified port at runtime
+
+# Stage 2: run dev server
+FROM node:18.9.1
+
+WORKDIR /app
+
+# Copy installed dependencies from stage 1
+COPY --from=deps /app/node_modules ./node_modules
+
+# Informs Docker that the container will be listening on the specified port at runtime 
 EXPOSE 5173
 
-# Copy the rest of your app's source code from your host to your image filesystem
-COPY . .
+# Copies the rest of the  app's source code from the host to the image filesystem
+COPY . . 
 
-# Run the specified command within the container
+# Runs the specified  command within the image to start the container application
 CMD ["npm", "run", "dev"]
